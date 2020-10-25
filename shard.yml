@@ -7,6 +7,8 @@ authors:
 targets:
   png-antialias:
     main: src/png-antialias.cr
+  png-upscale:
+    main: src/png-upscale.cr
 
 dependencies:
   stumpy_png:

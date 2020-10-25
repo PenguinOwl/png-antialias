@@ -11,8 +11,10 @@ module PNG::Antialias
 
   raise "Missing png file, specify with \"png-antialias <file>\"" unless ARGV[0]?
 
-  canvas = StumpyPNG.read(ARGV[0])
-  canvas2 = StumpyPNG.read(ARGV[0])
+  factor = 2
+  precanvas = StumpyPNG.read(ARGV[0])
+  canvas = StumpyCore::Canvas.new(precanvas.width * factor, precanvas.height * factor) { |x, y| precanvas[x // factor, y // factor] }
+  canvas2 = canvas.dup
   width, height = canvas.width - 1, canvas.height - 1
   (0..width).each do |x|
     (0..height).each do |y|
@@ -44,5 +46,5 @@ module PNG::Antialias
       canvas2[x, y] = StumpyCore::RGBA.from_rgba(average)
     end
   end
-  StumpyPNG.write(canvas2, ARGV[0].split('.').tap{|a| a[0] = a[0] + "-filtered"}.join('.'))
+  StumpyPNG.write(canvas2, ARGV[0].split('.').tap{|a| a[0] = a[0] + "-upscaled"}.join('.'))
 end
